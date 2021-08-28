@@ -10,6 +10,8 @@ plugins {
     // Apply the java-library plugin for API and implementation separation.
     id 'java-library'
     id 'maven-publish'
+    id "com.jfrog.artifactory"
+
 }
 
 sourceCompatibility = '16'
@@ -50,8 +52,8 @@ publishing {
         maven {
             url 'https://maven.pkg.github.com/Jacko161/dev-week-library'
             credentials {
-                username = System.getenv("USERNAME")
-                password = System.getenv("TOKEN")
+                username = "jacksonrobertfleming@hotmail.com"
+                password = System.getenv("ACCESS_KEY")
             }
         }
     }
