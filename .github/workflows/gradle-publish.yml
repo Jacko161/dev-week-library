@@ -41,3 +41,8 @@ jobs:
       env:
         USERNAME: ${{ github.actor }}
         TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Publish to Artifactory
+      run: |
+        jfrog rt u library build/libs/
+        jfrog rt bp
