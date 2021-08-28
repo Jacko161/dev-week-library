@@ -48,7 +48,7 @@ publishing {
 
     repositories {
         maven {
-            url 'https://dev-week-043097686996.d.codeartifact.ap-southeast-2.amazonaws.com/maven/dev-week-2021/'
+            url 'https://maven.pkg.github.com/Jacko161/dev-week-lib'
             credentials {
                 username = System.getenv("USERNAME")
                 password = System.getenv("TOKEN")
