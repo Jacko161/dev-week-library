@@ -41,7 +41,7 @@ publishing {
         mavenJava(MavenPublication) {
             groupId = 'com.jfleming'
             artifactId = 'lib'
-            version = '0.0.2'
+            version = '0.0.3'
             from components.java
         }
     }
