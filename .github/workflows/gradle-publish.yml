@@ -34,15 +34,15 @@ jobs:
     - name: Build with Gradle
       run: gradle build
 
-    # The USERNAME and TOKEN need to correspond to the credentials environment variables used in
-    # the publishing section of your build.gradle
-    - name: Publish to GitHub Packages
-      run: gradle publish
-      env:
-        USERNAME: ${{ github.actor }}
-        TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#    # The USERNAME and TOKEN need to correspond to the credentials environment variables used in
+#    # the publishing section of your build.gradle
+#    - name: Publish to GitHub Packages
+#      run: gradle publish
+#      env:
+#        USERNAME: ${{ github.actor }}
+#        TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Publish to Artifactory
       run: |
-        jfrog rt u build/libs/dev-week-library.jar
+        jfrog rt u build/libs/dev-week-library.jar https://devweek.jfrog.io/artifactory/dev-week-libs-snapshot/
         jfrog rt bp
