@@ -10,8 +10,7 @@ plugins {
     // Apply the java-library plugin for API and implementation separation.
     id 'java-library'
     id 'maven-publish'
-    id "com.jfrog.artifactory"
-
+    id "com.jfrog.artifactory" version "4.24.16"
 }
 
 sourceCompatibility = '16'
