@@ -44,5 +44,5 @@ jobs:
 
     - name: Publish to Artifactory
       run: |
-        jfrog rt u dev-week-library build/libs/
+        jfrog rt u build/libs/dev-week-library.jar
         jfrog rt bp
