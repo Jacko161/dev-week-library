@@ -49,7 +49,7 @@ publishing {
 
     repositories {
         maven {
-            url 'https://maven.pkg.github.com/Jacko161/dev-week-library'
+            url 'https://devweek.jfrog.io/artifactory/dev-week-libs-snapshot'
             credentials {
                 username = "jacksonrobertfleming@hotmail.com"
                 password = System.getenv("ACCESS_KEY")
