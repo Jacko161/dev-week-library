@@ -3,6 +3,8 @@
 # Check https://circleci.com/docs/2.0/language-java/ for more details
 #
 version: 2
+orbs:
+  slack: circleci/slack@4.4.4
 jobs:
   build:
     docker:
@@ -40,3 +42,12 @@ jobs:
 
       # run tests!
       - run: gradle test
+      - slack/notify:
+          channel: ABCXYZ
+          event: fail
+          template: basic_fail_1
+workflows:
+  deploy_and_notify:
+    jobs:
+      - deploy:
+        context: slack-secrets
