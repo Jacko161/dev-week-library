@@ -40,4 +40,4 @@ jobs:
       run: gradle artifactoryPublish
       env:
         EMAIL: ${{ secrets.JF_EMAIL }}
-        ACCESS_KEY: ${{ secrets.JF_ARTIFACTORY_SECRET }}
+        ACCESS_KEY: ${{ secrets.JF_ARTIFACTORY_API_KEY }}
