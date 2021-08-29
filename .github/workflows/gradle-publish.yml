@@ -17,12 +17,12 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-#    - uses: jfrog/setup-jfrog-cli@v1
-#      env:
-#        JF_ARTIFACTORY_1: ${{ secrets.JF_ARTIFACTORY_SECRET }}
-#    - run: |
-#        # Ping the server
-#        jfrog rt ping
+    - uses: jfrog/setup-jfrog-cli@v1
+      env:
+        JF_ARTIFACTORY_1: ${{ secrets.JF_ARTIFACTORY_SECRET }}
+    - run: |
+        # Ping the server
+        jfrog rt ping
     - name: Set up JDK 16
       uses: actions/setup-java@v2
       with:
