@@ -13,6 +13,7 @@ plugins {
     id "com.jfrog.artifactory" version "4.24.16"
 }
 
+
 sourceCompatibility = '16'
 
 repositories {
@@ -37,23 +38,29 @@ tasks.named('test') {
 }
 
 
+artifactory {
+    contextUrl = 'https://devweek.jfrog.io/artifactory' // base artifactory url
+    publish {
+        repository {
+            repoKey = 'maven-local-libs-snapshot-local'   // Artifactory repository key to publish to
+            username = System.getenv("EMAIL")
+            password = System.getenv("ACCESS_KEY")
+            maven = true
+        }
+        defaults {
+            publications('mavenJava')
+        }
+        publishBuildInfo = true
+        publishArtifacts = true
+        publishPom = true
+    }
+}
+
+
 publishing {
     publications {
         mavenJava(MavenPublication) {
-            groupId = 'com.jfleming'
-            artifactId = 'lib'
-            version = '0.0.3'
             from components.java
-        }
-    }
-
-    repositories {
-        maven {
-            url 'https://devweek.jfrog.io/artifactory/dev-week-libs-snapshot'
-            credentials {
-                username = "jacksonrobertfleming@hotmail.com"
-                password = System.getenv("ACCESS_KEY")
-            }
         }
     }
 }
