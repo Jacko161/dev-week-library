@@ -43,8 +43,8 @@ artifactory {
     publish {
         repository {
             repoKey = 'maven-local-libs-snapshot-local'   // Artifactory repository key to publish to
-            username = System.getenv("EMAIL")
-            password = System.getenv("ACCESS_KEY")
+            username = System.getenv("API_USER")
+            password = System.getenv("API_KEY")
             maven = true
         }
         defaults {

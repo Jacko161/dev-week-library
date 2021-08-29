@@ -19,6 +19,9 @@ jobs:
       TERM: dumb
 
     steps:
+      - run:
+            name: Install JFrog CLI
+            command: curl -fL https://getcli.jfrog.io | sh
       - checkout
 
       # Download and cache dependencies
@@ -50,8 +53,12 @@ jobs:
       - slack/notify:
           event: fail
           template: basic_fail_1
+      - run: gradle artifactoryPublish
+
 workflows:
   deploy_and_notify:
     jobs:
       - build:
-          context: slack-secrets
+          context:
+            - slack-secrets
+            - artifactory-secrets
