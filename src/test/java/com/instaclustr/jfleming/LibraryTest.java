@@ -22,7 +22,7 @@ class LibraryTest {
     @Test
     void stringCompareReturnsTrueForEmptyString(){
         classUnderTest = new Library();
-        assertTrue(classUnderTest.isStringEmptyOrNull("Blah"));
+        assertTrue(classUnderTest.isStringEmptyOrNull(""));
     }
 
     @Test
