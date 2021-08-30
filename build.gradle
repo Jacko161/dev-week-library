@@ -63,10 +63,6 @@ artifactory {
 publishing {
     publications {
         mavenJava(MavenPublication) {
-            version = '0.0.3-SNAPSHOT'
-            artifactId = 'library'
-            groupId = 'com.instaclustr'
-
             from components.java
         }
     }
