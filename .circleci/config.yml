@@ -52,20 +52,28 @@ jobs:
           path: ~/test-results
       - store_artifacts:
           path: ~/test-results/junit
-      - run: gradle artifactoryPublish
       - run:
           name: Extract Email Address of committer
           command: |
-           SLACK_USER_ID=$(curl -H "Authorization: Bearer $SLACK_ACCESS_TOKEN" -d "email=$COMMIT_EMAIL" https://slack.com/api/users.lookupByEmail | jq '.user.id')
-           echo "export SLACK_USER_ID=$SLACK_USER_ID" >> $BASH_ENV
+            SLACK_USER_ID=$(curl -H "Authorization: Bearer $SLACK_ACCESS_TOKEN" -d "email=$COMMIT_EMAIL" https://slack.com/api/users.lookupByEmail | jq '.user.id')
+            echo "export SLACK_USER_ID=$SLACK_USER_ID" >> $BASH_ENV
       - slack/notify:
           event: fail
           channel: '$SLACK_USER_ID'
           template: basic_fail_1
+      - run:
+          name: Fail Fast
+          when: on_fail
+          command: circleci-agent step halt
       - slack/notify:
           event: pass
           channel: '$SLACK_USER_ID'
-          template: basic_success_1
+          template: basic_on_hold_1
+      - hold:
+          event: pass
+         type: approval
+      - run: gradle artifactoryPublish
+
 
 workflows:
   deploy_and_notify:
