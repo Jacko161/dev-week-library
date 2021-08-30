@@ -55,7 +55,8 @@ jobs:
       - run:
           name: Extract Email Address of committer
           command: |
-           echo "export SLACK_USER_ID=bash -c \"$(curl -H \"Authorization: Bearer $SLACK_ACCESS_TOKEN\" -d \"email=$(COMMIT_EMAIL)\" https://slack.com/api/users.lookupByEmail | jq '.user.id')\"" >> $BASH_ENV
+           SLACK_USER_ID=bash -c \"$(curl -H \"Authorization: Bearer $SLACK_ACCESS_TOKEN\" -d \"email=$(COMMIT_EMAIL)\" https://slack.com/api/users.lookupByEmail | jq '.user.id')\"
+           echo "export SLACK_USER_ID=$SLACK_USER_ID" >> $BASH_ENV
       - slack/notify:
           event: fail
           channel: '$SLACK_USER_ID'
