@@ -48,7 +48,7 @@ jobs:
       - store_artifacts:
           path: ~/test-results/junit
       - slack/notify:
-          event: fail
+          channel: '<@U02CQ7GS9FC>'
           template: basic_fail_1
       - run: gradle artifactoryPublish
 
