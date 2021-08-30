@@ -55,7 +55,7 @@ jobs:
       - slack/notify:
           event: pass
           channel: 'U02CQ7GS9FC'
-          template: basic_pass_1
+          template: basic_success_1
 
 workflows:
   deploy_and_notify:
