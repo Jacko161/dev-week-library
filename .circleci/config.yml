@@ -70,7 +70,6 @@ jobs:
           channel: '$SLACK_USER_ID'
           template: basic_on_hold_1
       - hold:
-          event: pass
          type: approval
       - run: gradle artifactoryPublish
 
