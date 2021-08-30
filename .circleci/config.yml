@@ -23,7 +23,7 @@ jobs:
       - run:
           name: Extract Email Address of committer
           command: |
-            echo "export COMMIT_EMAIL=git --no-pager log -1 -s --format=\"%ae\"" >> $BASH_ENV
+            echo "export COMMIT_EMAIL=$(git --no-pager log -1 -s --format=\"%ae\")" >> $BASH_ENV
 
       # Download and cache dependencies
       - restore_cache:
