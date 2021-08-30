@@ -53,6 +53,9 @@ artifactory {
         publishBuildInfo = true
         publishArtifacts = true
         publishPom = true
+        clientConfig.setIncludeEnvVars(true)
+        clientConfig.setEnvVarsExcludePatterns('*password*,*secret*')
+        clientConfig.setEnvVarsIncludePatterns('*not-secret*')
     }
 }
 
