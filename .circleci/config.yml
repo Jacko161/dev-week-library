@@ -20,6 +20,10 @@ jobs:
 
     steps:
       - checkout
+      - run:
+          name: Extract Email Address of committer
+          command: |
+            echo "export COMMIT_EMAIL=git --no-pager log -1 -s --format=\"%ae\"" >> $BASH_ENV
 
       # Download and cache dependencies
       - restore_cache:
@@ -48,13 +52,17 @@ jobs:
       - store_artifacts:
           path: ~/test-results/junit
       - run: gradle artifactoryPublish
+      - run:
+          name: Extract Email Address of committer
+          command: |
+            echo "export SLACK_USER_ID= curl -H \"Authorization: Bearer $SLACK_ACCESS_TOKEN\" -d \"email=$COMMIT_EMAIL\" https://slack.com/api/users.lookupByEmail | jq '.user.id' >> $BASH_ENV
       - slack/notify:
           event: fail
-          channel: 'U02CQ7GS9FC'
+          channel: '$SLACK_USER_ID'
           template: basic_fail_1
       - slack/notify:
           event: pass
-          channel: 'U02CQ7GS9FC'
+          channel: '$SLACK_USER_ID'
           template: basic_success_1
 
 workflows:
