@@ -10,7 +10,6 @@ jobs:
     docker:
       # specify the version you desire here
       - image: cimg/openjdk:16.0.2
-
     working_directory: ~/repo
 
     environment:
@@ -69,13 +68,11 @@ jobs:
           event: pass
           channel: '$SLACK_USER_ID'
           template: basic_on_hold_1
-      - hold:
-         type: approval
   deploy:
     docker:
       # specify the version you desire here
       - image: cimg/openjdk:16.0.2
-      working_directory: ~/repo
+    working_directory: ~/repo
     steps:
       - checkout
       - run: gradle artifactoryPublish
