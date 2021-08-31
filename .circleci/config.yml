@@ -113,5 +113,6 @@ workflows:
          context:
             - artifactory-secrets
             - slack-secrets
+            - AWX-secrets
          requires:
             - hold
