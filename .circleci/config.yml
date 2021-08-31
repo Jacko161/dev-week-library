@@ -71,7 +71,12 @@ jobs:
           template: basic_on_hold_1
       - hold:
          type: approval
-      - run: gradle artifactoryPublish
+    deploy:
+      docker:
+        - image: cimg/openjdk:16.0.2
+      steps:
+        - checkout
+        - run: gradle artifactoryPublish
 
 
 workflows:
@@ -80,4 +85,12 @@ workflows:
       - build:
           context:
             - slack-secrets
+      - hold:
+          type: approval
+          requires:
+            - build
+      - deploy:
+         context:
             - artifactory-secrets
+         requires:
+            - hold
