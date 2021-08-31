@@ -80,7 +80,7 @@ jobs:
 
 
 workflows:
-  deploy_and_notify:
+  build_and_test:
     jobs:
       - build:
           context:
