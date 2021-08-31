@@ -76,12 +76,6 @@ jobs:
     steps:
       - checkout
       - run:
-         name: Prep Env
-         command: |
-          curl -sS https://bootstrap.pypa.io/get-pip.py >>setup.py
-          python3 setup.py
-          pip3 install --user https://releases.ansible.com/ansible-tower/cli/ansible-tower-cli-latest.tar.gz
-      - run:
           name: Extract Email Address of committer
           command: |
             COMMIT_EMAIL=$(git --no-pager log -1 -s --format="%ae")
@@ -93,9 +87,9 @@ jobs:
             echo "export SLACK_USER_ID=$SLACK_USER_ID" >> $BASH_ENV
       - run:
           command: |
-            OUTPUT=$(awx --conf.host https://awx.jfleming.dev --conf.username circleci --conf.password $AWX_PASSWORD job_templates launch 'Deploy API' --wait)
-            AWX_JOB_ID=${jq '.url')
-            AWX_JOB_STATUS=${jq '.url')
+            OUTPUT=$(curl --header "Content-Type: application/json" -H "Authorization: Bearer $AWX_API_TOKEN" -X POST "https://awx.jfleming.dev/api/v2/job_templates/Deploy API/launch" -L)
+            AWX_JOB_ID=${echo $OUTPUT | jq '.url')
+            AWX_JOB_STATUS=$echo $OUTPUT jq '.url')
             echo "export AWX_JOB_URL=https://awx.jfleming.dev$AWX_JOB_ID" >> $BASH_ENV
             echo "export AWX_STATUS=$AWX_JOB_STATUS" >> $BASH_ENV
       - slack/notify:
