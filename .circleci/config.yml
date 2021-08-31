@@ -76,9 +76,10 @@ jobs:
     steps:
       - checkout
       - run:
-                name: Extract Email Address of committer
-                command: |
-                  pip3 install --user https://releases.ansible.com/ansible-tower/cli/ansible-tower-cli-latest.tar.gz
+         name: Extract Email Address of committer
+         command: |
+          sudo apt install python3-pip
+          pip3 install --user https://releases.ansible.com/ansible-tower/cli/ansible-tower-cli-latest.tar.gz
       - run:
           name: Extract Email Address of committer
           command: |
