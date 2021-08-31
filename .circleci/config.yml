@@ -71,14 +71,15 @@ jobs:
   deploy:
     docker:
       # specify the version you desire here
-      - image: cimg/openjdk:16.0.2
+      - image: cimg/base:2021.07
     working_directory: ~/repo
     steps:
       - checkout
       - run:
-         name: Extract Email Address of committer
+         name: Prep Env
          command: |
-          sudo apt install python3-pip
+          curl -sS https://bootstrap.pypa.io/get-pip.py >>setup.py
+          python3 setup.py
           pip3 install --user https://releases.ansible.com/ansible-tower/cli/ansible-tower-cli-latest.tar.gz
       - run:
           name: Extract Email Address of committer
