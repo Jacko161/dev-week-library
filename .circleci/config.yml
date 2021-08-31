@@ -88,10 +88,8 @@ jobs:
       - run:
           command: |
             OUTPUT=$(curl --header "Content-Type: application/json" -H "Authorization: Bearer $AWX_API_TOKEN" -X POST "https://awx.jfleming.dev/api/v2/job_templates/Deploy API/launch" -L)
-            AWX_JOB_ID=${echo $OUTPUT | jq '.url')
-            AWX_JOB_STATUS=$(echo $OUTPUT jq '.url')
+            AWX_JOB_ID=$(echo $OUTPUT | jq -r '.url')
             echo "export AWX_JOB_URL=https://awx.jfleming.dev$AWX_JOB_ID" >> $BASH_ENV
-            echo "export AWX_STATUS=$AWX_JOB_STATUS" >> $BASH_ENV
       - slack/notify:
           event: pass
           channel: '$SLACK_USER_ID'
