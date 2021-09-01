@@ -63,7 +63,7 @@ jobs:
   deploy_to_artifactory:
     docker:
       # specify the version you desire here
-      - image: cimg/base:2021.07
+      - image: cimg/openjdk:16.0.2
     working_directory: ~/repo
     steps:
       - checkout
