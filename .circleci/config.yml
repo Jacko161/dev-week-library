@@ -10,7 +10,6 @@ jobs:
     docker:
       # specify the version you desire here
       - image: cimg/openjdk:16.0.2
-
     working_directory: ~/repo
 
     environment:
@@ -20,6 +19,16 @@ jobs:
 
     steps:
       - checkout
+      - run:
+          name: Extract Email Address of committer
+          command: |
+            COMMIT_EMAIL=$(git --no-pager log -1 -s --format="%ae")
+            echo "export COMMIT_EMAIL=$COMMIT_EMAIL" >> $BASH_ENV
+      - run:
+          name: Fetch Slack User ID
+          command: |
+            SLACK_USER_ID=$(curl -H "Authorization: Bearer $SLACK_ACCESS_TOKEN" -d "email=$COMMIT_EMAIL" https://slack.com/api/users.lookupByEmail | jq '.user.id')
+            echo "export SLACK_USER_ID=$SLACK_USER_ID" >> $BASH_ENV
 
       # Download and cache dependencies
       - restore_cache:
@@ -49,13 +58,50 @@ jobs:
           path: ~/test-results/junit
       - slack/notify:
           event: fail
+          channel: '$SLACK_USER_ID'
           template: basic_fail_1
-      - run: gradle artifactoryPublish
-
+  deploy_to_artifactory:
+    docker:
+      # specify the version you desire here
+      - image: cimg/openjdk:16.0.2
+    working_directory: ~/repo
+    steps:
+      - checkout
+      - run:
+          name: Extract Email Address of committer
+          command: |
+            COMMIT_EMAIL=$(git --no-pager log -1 -s --format="%ae")
+            echo "export COMMIT_EMAIL=$COMMIT_EMAIL" >> $BASH_ENV
+      - run:
+          name: Get Slack User ID
+          command: |
+            SLACK_USER_ID=$(curl -H "Authorization: Bearer $SLACK_ACCESS_TOKEN" -d "email=$COMMIT_EMAIL" https://slack.com/api/users.lookupByEmail | jq '.user.id')
+            echo "export SLACK_USER_ID=$SLACK_USER_ID" >> $BASH_ENV
+      - run:
+          name: Deploy to Artifactory
+          command: |
+            GRADLE_OUTPUT=$(gradle artifactoryPublish --console=plain)
+            ARTIFACTORY_URL=$(echo $GRADLE_OUTPUT | grep -oP "https:\/\/devweek\.jfrog\.io\/artifactory\/webapp\/builds\/repo\/\d{13}")
+            echo "ARTIFACTORY_URL=$ARTIFACTORY_URL" >> $BASH_ENV
+            echo $ARTIFACTORY_URL
+      - slack/notify:
+          event: pass
+          channel: '$SLACK_USER_ID'
+          template: ARTIFACTORY_TEMPLATE
+      - slack/notify:
+          event: fail
+          channel: '$SLACK_USER_ID'
+          template: basic_fail_1
 workflows:
-  deploy_and_notify:
+  build_and_test:
     jobs:
       - build:
-          context:
+         context:
             - slack-secrets
+      - deploy_to_artifactory:
+         context:
             - artifactory-secrets
+            - slack-secrets
+            - AWX-secrets
+         requires:
+            - build
