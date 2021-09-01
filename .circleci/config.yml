@@ -24,6 +24,11 @@ jobs:
           command: |
             COMMIT_EMAIL=$(git --no-pager log -1 -s --format="%ae")
             echo "export COMMIT_EMAIL=$COMMIT_EMAIL" >> $BASH_ENV
+      - run:
+          name: Fetch Slack User ID
+          command: |
+            SLACK_USER_ID=$(curl -H "Authorization: Bearer $SLACK_ACCESS_TOKEN" -d "email=$COMMIT_EMAIL" https://slack.com/api/users.lookupByEmail | jq '.user.id')
+            echo "export SLACK_USER_ID=$SLACK_USER_ID" >> $BASH_ENV
 
       # Download and cache dependencies
       - restore_cache:
@@ -51,11 +56,6 @@ jobs:
           path: ~/test-results
       - store_artifacts:
           path: ~/test-results/junit
-      - run:
-          name: Extract Email Address of committer
-          command: |
-            SLACK_USER_ID=$(curl -H "Authorization: Bearer $SLACK_ACCESS_TOKEN" -d "email=$COMMIT_EMAIL" https://slack.com/api/users.lookupByEmail | jq '.user.id')
-            echo "export SLACK_USER_ID=$SLACK_USER_ID" >> $BASH_ENV
       - slack/notify:
           event: fail
           channel: '$SLACK_USER_ID'
@@ -67,8 +67,8 @@ jobs:
       - slack/notify:
           event: pass
           channel: '$SLACK_USER_ID'
-          template: basic_on_hold_1
-  deploy:
+          template: basic_success_1
+  deploy_to_artifactory:
     docker:
       # specify the version you desire here
       - image: cimg/base:2021.07
@@ -85,32 +85,24 @@ jobs:
           command: |
             SLACK_USER_ID=$(curl -H "Authorization: Bearer $SLACK_ACCESS_TOKEN" -d "email=$COMMIT_EMAIL" https://slack.com/api/users.lookupByEmail | jq '.user.id')
             echo "export SLACK_USER_ID=$SLACK_USER_ID" >> $BASH_ENV
-      - run:
-          command: |
-            OUTPUT=$(curl -L --request POST 'https://awx.jfleming.dev/api/v2/job_templates/Deploy API/launch/' --header "Authorization: Bearer $AWX_API_TOKEN" --header 'Content-Type: application/json' --data-raw "{\"extra_vars\": {\"user_email\": \"$COMMIT_EMAIL\"}}")
-            AWX_JOB_ID=$(echo $OUTPUT | jq -r '.id')
-            echo "export AWX_JOB_URL=https://awx.jfleming.dev/#/jobs/playbook/$AWX_JOB_ID/output" >> $BASH_ENV
+      - run: gradle artifactoryPublish
       - slack/notify:
           event: pass
           channel: '$SLACK_USER_ID'
           template: AWX_TEMPLATE
-      - run: gradle artifactoryPublish
-
-
 workflows:
   build_and_test:
     jobs:
       - build:
-          context:
-            - slack-secrets
-      - hold:
-          type: approval
-          requires:
-            - build
-      - deploy:
+        context:
+          - slack-secrets
+      - deploy_to_artifactory:
          context:
-            - artifactory-secrets
+            - artifactory+-secrets
             - slack-secrets
             - AWX-secrets
          requires:
-            - hold
+            - build
+         filters:
+           branches:
+           only: main
