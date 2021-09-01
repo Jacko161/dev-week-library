@@ -77,7 +77,8 @@ jobs:
           command: |
             SLACK_USER_ID=$(curl -H "Authorization: Bearer $SLACK_ACCESS_TOKEN" -d "email=$COMMIT_EMAIL" https://slack.com/api/users.lookupByEmail | jq '.user.id')
             echo "export SLACK_USER_ID=$SLACK_USER_ID" >> $BASH_ENV
-      - run: gradle artifactoryPublish
+      - run: GRADLE_OUTPUT=$(gradle artifactoryPublish --console=plain)
+      - run: echo $GRADLE_OUTPUT
       - slack/notify:
           event: pass
           channel: '$SLACK_USER_ID'
