@@ -94,7 +94,7 @@ workflows:
             - slack-secrets
       - deploy_to_artifactory:
          context:
-            - artifactory+-secrets
+            - artifactory-secrets
             - slack-secrets
             - AWX-secrets
          requires:
