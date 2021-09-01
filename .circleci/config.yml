@@ -103,6 +103,3 @@ workflows:
             - AWX-secrets
          requires:
             - build
-         filters:
-           branches:
-           only: main
