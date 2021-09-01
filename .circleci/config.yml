@@ -89,7 +89,7 @@ jobs:
       - slack/notify:
           event: pass
           channel: '$SLACK_USER_ID'
-          template: AWX_TEMPLATE
+          template: ARTIFACTORY_TEMPLATE
 workflows:
   build_and_test:
     jobs:
