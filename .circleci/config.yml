@@ -60,14 +60,6 @@ jobs:
           event: fail
           channel: '$SLACK_USER_ID'
           template: basic_fail_1
-      - run:
-          name: Fail Fast
-          when: on_fail
-          command: circleci-agent step halt
-      - slack/notify:
-          event: pass
-          channel: '$SLACK_USER_ID'
-          template: basic_success_1
   deploy_to_artifactory:
     docker:
       # specify the version you desire here
@@ -94,8 +86,8 @@ workflows:
   build_and_test:
     jobs:
       - build:
-        context:
-          - slack-secrets
+         context:
+            - slack-secrets
       - deploy_to_artifactory:
          context:
             - artifactory+-secrets
