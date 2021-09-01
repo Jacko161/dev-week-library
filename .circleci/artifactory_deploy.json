@@ -50,9 +50,17 @@
           "type": "button",
           "text": {
             "type": "plain_text",
+            "text": "View Deployment"
+          },
+          "url": "${ARTIFACTORY_URL}"
+        },
+        {
+          "type": "button",
+          "text": {
+            "type": "plain_text",
             "text": "View Job"
           },
-          "url": "https://devweek.jfrog.io/ui/admin/artifactory/security/users/new"
+          "url": "${CIRCLE_BUILD_URL}"
         }
       ]
     }

@@ -81,8 +81,9 @@ jobs:
           name: Deploy to Artifactory
           command: |
             GRADLE_OUTPUT=$(gradle artifactoryPublish --console=plain)
-            echo "GRADLE_OUTPUT=$GRADLE_OUTPUT" >> $BASH_ENV
-            echo $GRADLE_OUTPUT
+            ARTIFACTORY_URL=$(echo $GRADLE_OUTPUT | grep -oP "https:\/\/devweek\.jfrog\.io\/artifactory\/webapp\/builds\/repo\/\d{13})
+            echo "ARTIFACTORY_URL=ARTIFACTORY_URL" >> $BASH_ENV
+            echo ARTIFACTORY_URL
       - slack/notify:
           event: pass
           channel: '$SLACK_USER_ID'
