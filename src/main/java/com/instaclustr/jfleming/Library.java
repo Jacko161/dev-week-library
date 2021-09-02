@@ -14,4 +14,8 @@ public class Library {
     public boolean isStringEmptyOrNull(String input){
         return input == null || input.isEmpty();
     }
+
+    public String greetUser(String username){
+        return "Hi there, " + username;
+    }
 }
