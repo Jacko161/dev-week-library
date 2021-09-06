@@ -42,8 +42,6 @@ tasks.named('test') {
 test {
     finalizedBy jacocoTestCoverageVerification, jacocoTestReport // report is always generated after tests run
     jacoco {
-        excludes += ["com.instaclustr.jfleming.devweek.DevweekApplication"]
-
     }
 }
 
