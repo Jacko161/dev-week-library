@@ -30,4 +30,16 @@ class LibraryTest {
         Library classUnderTest = new Library();
         assertTrue(classUnderTest.isStringEmptyOrNull(null));
     }
+
+    @Test
+    void greetingMethodGreetsUsers(){
+        Library classUnderTest = new Library();
+        assertEquals(classUnderTest.greetUser("Jackson"), "Hi there, Jackson");
+    }
+
+    @Test
+    void goodbyeMethodSaysGoodbye(){
+        Library classUnderTest = new Library();
+        assertEquals(classUnderTest.byeUser("Jackson"), "Goodbye, Jackson");
+    }
 }
