@@ -18,4 +18,9 @@ public class Library {
     public String greetUser(String username){
         return "Hi there, " + username;
     }
+
+    public String byeUser(String username){
+        return "Goodbye, " + username;
+    }
+
 }
